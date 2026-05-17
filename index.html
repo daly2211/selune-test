@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Currency Converter</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f8fb;
+      --panel: #ffffff;
+      --text: #18212f;
+      --muted: #667085;
+      --line: #d9e0ea;
+      --accent: #0f766e;
+      --accent-dark: #115e59;
+      --danger: #b42318;
+      --shadow: 0 18px 50px rgba(20, 32, 49, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(15, 118, 110, 0.12), transparent 28%),
+        linear-gradient(135deg, #f6f8fb 0%, #edf3f7 100%);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    main {
+      width: min(100%, 460px);
+      background: var(--panel);
+      border: 1px solid rgba(217, 224, 234, 0.9);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 26px;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: 1.55rem;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    p {
+      margin: 0 0 22px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #344054;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    input,
+    select,
+    button {
+      width: 100%;
+      min-height: 46px;
+      border-radius: 6px;
+      font: inherit;
+    }
+
+    input,
+    select {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--text);
+      padding: 10px 12px;
+      outline: none;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.14);
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 46px 1fr;
+      gap: 10px;
+      align-items: end;
+    }
+
+    .swap {
+      border: 1px solid var(--line);
+      background: #f8fafc;
+      color: var(--text);
+      cursor: pointer;
+      font-size: 1.15rem;
+      line-height: 1;
+    }
+
+    .swap:hover {
+      background: #eef4f6;
+    }
+
+    .convert {
+      margin-top: 4px;
+      border: 0;
+      background: var(--accent);
+      color: #fff;
+      cursor: pointer;
+      font-weight: 800;
+    }
+
+    .convert:hover {
+      background: var(--accent-dark);
+    }
+
+    .convert:disabled,
+    .swap:disabled {
+      cursor: wait;
+      opacity: 0.72;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 16px;
+      min-height: 94px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #f8fbfb;
+    }
+
+    .result strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: clamp(1.55rem, 8vw, 2.25rem);
+      line-height: 1.15;
+      overflow-wrap: anywhere;
+    }
+
+    .result small {
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .error {
+      color: var(--danger);
+      font-weight: 700;
+    }
+
+    footer {
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.45;
+    }
+
+    a {
+      color: var(--accent-dark);
+    }
+
+    @media (max-width: 420px) {
+      body {
+        padding: 14px;
+      }
+
+      main {
+        padding: 20px;
+      }
+
+      .row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Currency Converter</h1>
+    <p>Simple daily-rate conversion using a public API with no key.</p>
+
+    <form id="converter">
+      <div class="field">
+        <label for="amount">Amount</label>
+        <input id="amount" type="number" min="0" step="0.01" value="100" inputmode="decimal" required>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label for="from">From</label>
+          <select id="from" required></select>
+        </div>
+
+        <button class="swap" id="swap" type="button" title="Swap currencies" aria-label="Swap currencies">⇄</button>
+
+        <div class="field">
+          <label for="to">To</label>
+          <select id="to" required></select>
+        </div>
+      </div>
+
+      <button class="convert" id="convert" type="submit">Convert</button>
+    </form>
+
+    <section class="result" aria-live="polite" aria-atomic="true">
+      <strong id="resultValue">Loading...</strong>
+      <small id="resultMeta">Fetching currencies from Frankfurter.</small>
+    </section>
+
+    <footer>
+      Rates from <a href="https://frankfurter.dev/" target="_blank" rel="noreferrer">Frankfurter</a>, based on European Central Bank reference data.
+    </footer>
+  </main>
+
+  <script>
+    const API = "https://api.frankfurter.dev/v1";
+    const amountInput = document.querySelector("#amount");
+    const fromSelect = document.querySelector("#from");
+    const toSelect = document.querySelector("#to");
+    const form = document.querySelector("#converter");
+    const swapButton = document.querySelector("#swap");
+    const convertButton = document.querySelector("#convert");
+    const resultValue = document.querySelector("#resultValue");
+    const resultMeta = document.querySelector("#resultMeta");
+
+    const preferredCurrencies = ["USD", "EUR", "GBP", "JPY", "CAD", "AUD", "CHF", "CNY"];
+
+    function formatMoney(value, currency) {
+      try {
+        return new Intl.NumberFormat(undefined, {
+          style: "currency",
+          currency,
+          maximumFractionDigits: 2
+        }).format(value);
+      } catch {
+        return `${value.toFixed(2)} ${currency}`;
+      }
+    }
+
+    function setLoading(isLoading) {
+      convertButton.disabled = isLoading;
+      swapButton.disabled = isLoading;
+      convertButton.textContent = isLoading ? "Converting..." : "Convert";
+    }
+
+    function showError(message) {
+      resultValue.textContent = "Could not convert";
+      resultValue.className = "error";
+      resultMeta.textContent = message;
+    }
+
+    function showResult(amount, from, converted, to, rate, date) {
+      resultValue.className = "";
+      resultValue.textContent = formatMoney(converted, to);
+      resultMeta.textContent = `${formatMoney(amount, from)} = ${formatMoney(converted, to)}. Rate: 1 ${from} = ${rate.toFixed(6)} ${to}. Date: ${date}.`;
+    }
+
+    function fillCurrencySelects(currencies) {
+      const codes = Object.keys(currencies).sort((a, b) => {
+        const aPreferred = preferredCurrencies.indexOf(a);
+        const bPreferred = preferredCurrencies.indexOf(b);
+
+        if (aPreferred !== -1 || bPreferred !== -1) {
+          return (aPreferred === -1 ? 999 : aPreferred) - (bPreferred === -1 ? 999 : bPreferred);
+        }
+
+        return a.localeCompare(b);
+      });
+
+      for (const code of codes) {
+        const label = `${code} - ${currencies[code]}`;
+        fromSelect.add(new Option(label, code));
+        toSelect.add(new Option(label, code));
+      }
+
+      fromSelect.value = currencies.USD ? "USD" : codes[0];
+      toSelect.value = currencies.EUR ? "EUR" : codes[1] || codes[0];
+    }
+
+    async function loadCurrencies() {
+      try {
+        const response = await fetch(`${API}/currencies`);
+        if (!response.ok) throw new Error("Currency list request failed.");
+
+        const currencies = await response.json();
+        fillCurrencySelects(currencies);
+        await convert();
+      } catch {
+        showError("The currency list did not load. Check your internet connection and try refreshing the page.");
+      }
+    }
+
+    async function convert() {
+      const amount = Number(amountInput.value);
+      const from = fromSelect.value;
+      const to = toSelect.value;
+
+      if (!Number.isFinite(amount) || amount < 0) {
+        showError("Enter a valid amount of 0 or more.");
+        return;
+      }
+
+      if (from === to) {
+        showResult(amount, from, amount, to, 1, "same currency");
+        return;
+      }
+
+      setLoading(true);
+
+      try {
+        const requestedAmount = amount === 0 ? 1 : amount;
+        const params = new URLSearchParams({ amount: requestedAmount, from, to });
+        const response = await fetch(`${API}/latest?${params}`);
+        if (!response.ok) throw new Error("Rate request failed.");
+
+        const data = await response.json();
+        const rate = data.rates[to] / requestedAmount;
+        const converted = amount * rate;
+
+        if (!Number.isFinite(converted) || !Number.isFinite(rate)) {
+          throw new Error("Rate missing from response.");
+        }
+
+        showResult(amount, from, converted, to, rate, data.date);
+      } catch {
+        showError("The exchange rate could not be loaded right now. Try again in a moment.");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      convert();
+    });
+
+    swapButton.addEventListener("click", () => {
+      const currentFrom = fromSelect.value;
+      fromSelect.value = toSelect.value;
+      toSelect.value = currentFrom;
+      convert();
+    });
+
+    loadCurrencies();
+  </script>
+</body>
+</html>
