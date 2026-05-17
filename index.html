@@ -7,19 +7,42 @@
   <style>
     :root {
       color-scheme: light;
-      --bg: #f6f8fb;
+      --bg: #f0f4f8;
       --panel: #ffffff;
-      --text: #18212f;
-      --muted: #667085;
-      --line: #d9e0ea;
-      --accent: #0f766e;
-      --accent-dark: #115e59;
-      --danger: #b42318;
-      --shadow: 0 18px 50px rgba(20, 32, 49, 0.12);
+      --text: #1a202c;
+      --muted: #718096;
+      --line: #e2e8f0;
+      --accent: #0891b2;
+      --accent-dark: #0e7490;
+      --accent-light: #06b6d4;
+      --success: #059669;
+      --danger: #dc2626;
+      --warning: #f59e0b;
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.04);
+      --shadow-hover: 0 24px 70px rgba(0, 0, 0, 0.12), 0 6px 20px rgba(0, 0, 0, 0.06);
     }
 
     * {
       box-sizing: border-box;
+    }
+
+    @keyframes breathe {
+      0%, 100% {
+        background-position: 0% 50%, 100% 50%, 50% 0%;
+        background-size: 100% 100%, 100% 100%, 100% 100%;
+      }
+      25% {
+        background-position: 20% 30%, 80% 70%, 40% 20%;
+        background-size: 120% 120%, 110% 110%, 115% 115%;
+      }
+      50% {
+        background-position: 40% 60%, 60% 40%, 30% 50%;
+        background-size: 110% 110%, 120% 120%, 105% 105%;
+      }
+      75% {
+        background-position: 60% 40%, 40% 60%, 70% 30%;
+        background-size: 115% 115%, 105% 105%, 120% 120%;
+      }
     }
 
     body {
@@ -29,197 +52,430 @@
       place-items: center;
       padding: 24px;
       background:
-        radial-gradient(circle at 20% 10%, rgba(15, 118, 110, 0.12), transparent 28%),
-        linear-gradient(135deg, #f6f8fb 0%, #edf3f7 100%);
+        radial-gradient(circle at 20% 10%, rgba(8, 145, 178, 0.15), transparent 40%),
+        radial-gradient(circle at 80% 90%, rgba(6, 182, 212, 0.12), transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(14, 116, 144, 0.08), transparent 50%),
+        linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 25%, #e6f2f7 50%, #dbeafe 75%, #e0f2fe 100%);
+      background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+      animation: breathe 12s ease-in-out infinite;
       color: var(--text);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     main {
-      width: min(100%, 460px);
-      background: var(--panel);
-      border: 1px solid rgba(217, 224, 234, 0.9);
-      border-radius: 8px;
+      width: min(100%, 520px);
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(226, 232, 240, 0.8);
+      border-radius: 20px;
       box-shadow: var(--shadow);
-      padding: 26px;
+      padding: 40px;
+      transition: all 0.3s ease;
+      animation: fadeIn 0.6s ease-out;
+    }
+
+    main:hover {
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-2px);
     }
 
     h1 {
-      margin: 0 0 6px;
-      font-size: 1.55rem;
+      margin: 0 0 8px;
+      font-size: 2rem;
       line-height: 1.2;
-      letter-spacing: 0;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #0e7490 0%, #06b6d4 50%, #0891b2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer 3s ease-in-out infinite;
+      background-size: 200% 100%;
+    }
+
+    @keyframes shimmer {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
     }
 
     p {
-      margin: 0 0 22px;
+      margin: 0 0 32px;
       color: var(--muted);
-      line-height: 1.5;
+      line-height: 1.6;
+      font-size: 0.95rem;
     }
 
     label {
       display: block;
       margin-bottom: 8px;
-      color: #344054;
-      font-size: 0.9rem;
-      font-weight: 700;
+      color: #2d3748;
+      font-size: 0.875rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
     }
 
     input,
     select,
     button {
       width: 100%;
-      min-height: 46px;
-      border-radius: 6px;
+      min-height: 52px;
+      border-radius: 12px;
       font: inherit;
+      transition: all 0.2s ease;
     }
 
     input,
     select {
-      border: 1px solid var(--line);
+      border: 2px solid var(--line);
       background: #fff;
       color: var(--text);
-      padding: 10px 12px;
+      padding: 14px 16px;
       outline: none;
+      font-size: 1rem;
     }
 
     input:focus,
     select:focus {
       border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.14);
+      box-shadow: 0 0 0 4px rgba(8, 145, 178, 0.12);
+      transform: translateY(-1px);
+    }
+
+    input:hover,
+    select:hover {
+      border-color: #cbd5e0;
     }
 
     .field {
-      margin-bottom: 16px;
+      margin-bottom: 20px;
     }
 
     .row {
       display: grid;
-      grid-template-columns: 1fr 46px 1fr;
-      gap: 10px;
+      grid-template-columns: 1fr 56px 1fr;
+      gap: 14px;
       align-items: end;
     }
 
     .swap {
-      border: 1px solid var(--line);
-      background: #f8fafc;
+      border: 2px solid var(--line);
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
       color: var(--text);
       cursor: pointer;
-      font-size: 1.15rem;
+      font-size: 1.4rem;
       line-height: 1;
+      font-weight: 600;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .swap:hover {
-      background: #eef4f6;
+      background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e0 100%);
+      border-color: var(--accent);
+      transform: scale(1.08) rotate(180deg);
+      box-shadow: 0 4px 12px rgba(8, 145, 178, 0.2);
+    }
+
+    .swap:active {
+      transform: scale(0.95) rotate(180deg);
     }
 
     .convert {
-      margin-top: 4px;
+      margin-top: 12px;
       border: 0;
-      background: var(--accent);
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
       color: #fff;
       cursor: pointer;
-      font-weight: 800;
+      font-weight: 700;
+      font-size: 1.05rem;
+      letter-spacing: 0.02em;
+      box-shadow: 0 4px 14px rgba(8, 145, 178, 0.35);
+      transition: all 0.3s ease;
     }
 
     .convert:hover {
-      background: var(--accent-dark);
+      background: linear-gradient(135deg, var(--accent-dark) 0%, var(--accent) 100%);
+      box-shadow: 0 6px 20px rgba(8, 145, 178, 0.45);
+      transform: translateY(-2px);
+    }
+
+    .convert:active {
+      transform: translateY(0);
     }
 
     .convert:disabled,
     .swap:disabled {
       cursor: wait;
-      opacity: 0.72;
+      opacity: 0.6;
+      transform: none !important;
     }
 
     .result {
-      margin-top: 20px;
-      padding: 16px;
-      min-height: 94px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: #f8fbfb;
+      margin-top: 28px;
+      padding: 24px;
+      min-height: 120px;
+      border: 2px solid rgba(8, 145, 178, 0.2);
+      border-radius: 14px;
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      animation: slideIn 0.4s ease-out;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .result::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      animation: shine 3s ease-in-out infinite;
+    }
+
+    @keyframes shine {
+      0%, 100% { left: -100%; }
+      50% { left: 100%; }
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .result strong {
       display: block;
-      margin-bottom: 6px;
-      font-size: clamp(1.55rem, 8vw, 2.25rem);
+      margin-bottom: 10px;
+      font-size: clamp(2rem, 8vw, 2.75rem);
       line-height: 1.15;
       overflow-wrap: anywhere;
+      background: linear-gradient(135deg, var(--accent-dark) 0%, var(--accent-light) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      position: relative;
+      z-index: 1;
     }
 
     .result small {
       color: var(--muted);
-      line-height: 1.45;
+      line-height: 1.5;
+      font-size: 0.9rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .result .rate-info {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(8, 145, 178, 0.15);
+      font-size: 0.8rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .result .rate-info span {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--muted);
+    }
+
+    .result .rate-info .label {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .currency-symbol {
+      display: inline-block;
+      font-size: 1.1em;
+      margin-right: 4px;
+      opacity: 0.8;
     }
 
     .error {
-      color: var(--danger);
+      color: var(--danger) !important;
       font-weight: 700;
     }
 
     footer {
-      margin-top: 16px;
+      margin-top: 24px;
       color: var(--muted);
-      font-size: 0.82rem;
-      line-height: 1.45;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      text-align: center;
     }
 
     a {
       color: var(--accent-dark);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s ease;
     }
 
-    @media (max-width: 420px) {
+    a:hover {
+      color: var(--accent-light);
+      text-decoration: underline;
+    }
+
+    .keyboard-hint {
+      margin-top: 16px;
+      padding: 14px;
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border: 1px solid #fbbf24;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      color: #92400e;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(251, 191, 36, 0.2);
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 480px) {
       body {
-        padding: 14px;
+        padding: 16px;
       }
 
       main {
-        padding: 20px;
+        padding: 28px;
+        border-radius: 16px;
       }
 
       .row {
         grid-template-columns: 1fr;
       }
+
+      .swap {
+        transform: rotate(90deg);
+      }
+
+      .swap:hover {
+        transform: rotate(270deg) scale(1.08);
+      }
+
+      h1 {
+        font-size: 1.65rem;
+      }
+    }
+
+    /* Enhanced select styling with flags */
+    select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23718096' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 40px;
+      font-size: 1rem;
+    }
+
+    option {
+      padding: 10px;
+      font-size: 1rem;
+    }
+
+    /* Status indicator */
+    .status-indicator {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      margin-right: 6px;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.2); }
+    }
+
+    .trend-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 8px;
+      background: rgba(5, 150, 105, 0.1);
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--success);
+    }
+
+    .trend-indicator.down {
+      background: rgba(220, 38, 38, 0.1);
+      color: var(--danger);
+    }
+
+    .trend-indicator.neutral {
+      background: rgba(113, 128, 150, 0.1);
+      color: var(--muted);
     }
   </style>
 </head>
 <body>
   <main>
-    <h1>Currency Converter</h1>
-    <p>Simple daily-rate conversion using a public API with no key.</p>
+    <h1>💱 Currency Converter</h1>
+    <p><span class="status-indicator"></span>Real-time exchange rates from the European Central Bank via Frankfurter API.</p>
 
     <form id="converter">
       <div class="field">
-        <label for="amount">Amount</label>
-        <input id="amount" type="number" min="0" step="0.01" value="100" inputmode="decimal" required>
+        <label for="amount">💰 Amount</label>
+        <input id="amount" type="number" min="0" step="0.01" value="100" inputmode="decimal" required accesskey="a" placeholder="Enter amount...">
       </div>
 
       <div class="row">
         <div class="field">
-          <label for="from">From</label>
-          <select id="from" required></select>
+          <label for="from">From Currency</label>
+          <select id="from" required accesskey="f"></select>
         </div>
 
-        <button class="swap" id="swap" type="button" title="Swap currencies" aria-label="Swap currencies">⇄</button>
+        <button class="swap" id="swap" type="button" title="Swap currencies (Alt+S)" aria-label="Swap currencies" accesskey="s">⇄</button>
 
         <div class="field">
-          <label for="to">To</label>
-          <select id="to" required></select>
+          <label for="to">To Currency</label>
+          <select id="to" required accesskey="t"></select>
         </div>
       </div>
 
-      <button class="convert" id="convert" type="submit">Convert</button>
+      <button class="convert" id="convert" type="submit" accesskey="c">
+        Convert
+      </button>
     </form>
 
     <section class="result" aria-live="polite" aria-atomic="true">
       <strong id="resultValue">Loading...</strong>
-      <small id="resultMeta">Fetching currencies from Frankfurter.</small>
+      <small id="resultMeta">Fetching currencies from Frankfurter API...</small>
+      <div id="rateInfo" class="rate-info" style="display: none;"></div>
     </section>
 
+    <div class="keyboard-hint">
+      ⌨️ <strong>Keyboard shortcuts:</strong> Alt+A (Amount) • Alt+F (From) • Alt+T (To) • Alt+S (Swap) • Alt+C (Convert)
+    </div>
+
     <footer>
-      Rates from <a href="https://frankfurter.dev/" target="_blank" rel="noreferrer">Frankfurter</a>, based on European Central Bank reference data.
+      Exchange rates provided by <a href="https://frankfurter.dev/" target="_blank" rel="noreferrer">Frankfurter API</a><br>
+      Based on European Central Bank reference data • Updated daily at 16:00 CET
     </footer>
   </main>
 
@@ -233,8 +489,52 @@
     const convertButton = document.querySelector("#convert");
     const resultValue = document.querySelector("#resultValue");
     const resultMeta = document.querySelector("#resultMeta");
+    const rateInfo = document.querySelector("#rateInfo");
+
+    // Enhanced currency data with symbols and full names
+    const currencyData = {
+      "USD": { flag: "🇺🇸", symbol: "$", name: "US Dollar" },
+      "EUR": { flag: "🇪🇺", symbol: "€", name: "Euro" },
+      "GBP": { flag: "🇬🇧", symbol: "£", name: "British Pound" },
+      "JPY": { flag: "🇯🇵", symbol: "¥", name: "Japanese Yen" },
+      "CAD": { flag: "🇨🇦", symbol: "C$", name: "Canadian Dollar" },
+      "AUD": { flag: "🇦🇺", symbol: "A$", name: "Australian Dollar" },
+      "CHF": { flag: "🇨🇭", symbol: "CHF", name: "Swiss Franc" },
+      "CNY": { flag: "🇨🇳", symbol: "¥", name: "Chinese Yuan" },
+      "SEK": { flag: "🇸🇪", symbol: "kr", name: "Swedish Krona" },
+      "NZD": { flag: "🇳🇿", symbol: "NZ$", name: "New Zealand Dollar" },
+      "MXN": { flag: "🇲🇽", symbol: "$", name: "Mexican Peso" },
+      "SGD": { flag: "🇸🇬", symbol: "S$", name: "Singapore Dollar" },
+      "HKD": { flag: "🇭🇰", symbol: "HK$", name: "Hong Kong Dollar" },
+      "NOK": { flag: "🇳🇴", symbol: "kr", name: "Norwegian Krone" },
+      "KRW": { flag: "🇰🇷", symbol: "₩", name: "South Korean Won" },
+      "TRY": { flag: "🇹🇷", symbol: "₺", name: "Turkish Lira" },
+      "RUB": { flag: "🇷🇺", symbol: "₽", name: "Russian Ruble" },
+      "INR": { flag: "🇮🇳", symbol: "₹", name: "Indian Rupee" },
+      "BRL": { flag: "🇧🇷", symbol: "R$", name: "Brazilian Real" },
+      "ZAR": { flag: "🇿🇦", symbol: "R", name: "South African Rand" },
+      "DKK": { flag: "🇩🇰", symbol: "kr", name: "Danish Krone" },
+      "PLN": { flag: "🇵🇱", symbol: "zł", name: "Polish Zloty" },
+      "THB": { flag: "🇹🇭", symbol: "฿", name: "Thai Baht" },
+      "IDR": { flag: "🇮🇩", symbol: "Rp", name: "Indonesian Rupiah" },
+      "HUF": { flag: "🇭🇺", symbol: "Ft", name: "Hungarian Forint" },
+      "CZK": { flag: "🇨🇿", symbol: "Kč", name: "Czech Koruna" },
+      "ILS": { flag: "🇮🇱", symbol: "₪", name: "Israeli Shekel" },
+      "CLP": { flag: "🇨🇱", symbol: "$", name: "Chilean Peso" },
+      "PHP": { flag: "🇵🇭", symbol: "₱", name: "Philippine Peso" },
+      "AED": { flag: "🇦🇪", symbol: "د.إ", name: "UAE Dirham" },
+      "COP": { flag: "🇨🇴", symbol: "$", name: "Colombian Peso" },
+      "SAR": { flag: "🇸🇦", symbol: "﷼", name: "Saudi Riyal" },
+      "MYR": { flag: "🇲🇾", symbol: "RM", name: "Malaysian Ringgit" },
+      "RON": { flag: "🇷🇴", symbol: "lei", name: "Romanian Leu" },
+      "BGN": { flag: "🇧🇬", symbol: "лв", name: "Bulgarian Lev" },
+      "ISK": { flag: "🇮🇸", symbol: "kr", name: "Icelandic Króna" },
+      "HRK": { flag: "🇭🇷", symbol: "kn", name: "Croatian Kuna" }
+    };
 
     const preferredCurrencies = ["USD", "EUR", "GBP", "JPY", "CAD", "AUD", "CHF", "CNY"];
+
+    let previousRate = null;
 
     function formatMoney(value, currency) {
       try {
@@ -244,26 +544,63 @@
           maximumFractionDigits: 2
         }).format(value);
       } catch {
-        return `${value.toFixed(2)} ${currency}`;
+        const data = currencyData[currency];
+        const symbol = data ? data.symbol : currency;
+        return `${symbol}${value.toFixed(2)}`;
       }
     }
 
     function setLoading(isLoading) {
       convertButton.disabled = isLoading;
       swapButton.disabled = isLoading;
-      convertButton.textContent = isLoading ? "Converting..." : "Convert";
+      
+      if (isLoading) {
+        convertButton.innerHTML = 'Converting<span class="loading-spinner"></span>';
+      } else {
+        convertButton.textContent = "Convert";
+      }
     }
 
     function showError(message) {
-      resultValue.textContent = "Could not convert";
+      resultValue.textContent = "❌ Could not convert";
       resultValue.className = "error";
       resultMeta.textContent = message;
+      rateInfo.style.display = "none";
+    }
+
+    function getTrendIndicator(currentRate) {
+      if (previousRate === null) return '';
+      
+      const change = ((currentRate - previousRate) / previousRate) * 100;
+      const absChange = Math.abs(change);
+      
+      if (absChange < 0.01) {
+        return '<span class="trend-indicator neutral">→ Stable</span>';
+      } else if (change > 0) {
+        return `<span class="trend-indicator">↗ +${absChange.toFixed(2)}%</span>`;
+      } else {
+        return `<span class="trend-indicator down">↘ -${absChange.toFixed(2)}%</span>`;
+      }
     }
 
     function showResult(amount, from, converted, to, rate, date) {
       resultValue.className = "";
-      resultValue.textContent = formatMoney(converted, to);
-      resultMeta.textContent = `${formatMoney(amount, from)} = ${formatMoney(converted, to)}. Rate: 1 ${from} = ${rate.toFixed(6)} ${to}. Date: ${date}.`;
+      const fromData = currencyData[from] || { flag: "💱", symbol: from };
+      const toData = currencyData[to] || { flag: "💱", symbol: to };
+      
+      resultValue.innerHTML = `<span class="currency-symbol">${toData.symbol}</span>${converted.toFixed(2)}`;
+      resultMeta.innerHTML = `${fromData.flag} ${formatMoney(amount, from)} = ${toData.flag} ${formatMoney(converted, to)}`;
+      
+      const trendHtml = getTrendIndicator(rate);
+      previousRate = rate;
+      
+      // Show additional rate information
+      rateInfo.style.display = "flex";
+      rateInfo.innerHTML = `
+        <span><span class="label">Rate:</span> 1 ${from} = ${rate.toFixed(6)} ${to}</span>
+        <span><span class="label">Date:</span> ${date}</span>
+        ${trendHtml}
+      `;
     }
 
     function fillCurrencySelects(currencies) {
@@ -279,7 +616,8 @@
       });
 
       for (const code of codes) {
-        const label = `${code} - ${currencies[code]}`;
+        const data = currencyData[code] || { flag: "💱", symbol: code, name: currencies[code] };
+        const label = `${data.flag} ${code} - ${data.name || currencies[code]}`;
         fromSelect.add(new Option(label, code));
         toSelect.add(new Option(label, code));
       }
@@ -297,7 +635,7 @@
         fillCurrencySelects(currencies);
         await convert();
       } catch {
-        showError("The currency list did not load. Check your internet connection and try refreshing the page.");
+        showError("⚠️ The currency list did not load. Check your internet connection and try refreshing the page.");
       }
     }
 
@@ -307,7 +645,7 @@
       const to = toSelect.value;
 
       if (!Number.isFinite(amount) || amount < 0) {
-        showError("Enter a valid amount of 0 or more.");
+        showError("⚠️ Enter a valid amount of 0 or more.");
         return;
       }
 
@@ -334,7 +672,7 @@
 
         showResult(amount, from, converted, to, rate, data.date);
       } catch {
-        showError("The exchange rate could not be loaded right now. Try again in a moment.");
+        showError("⚠️ The exchange rate could not be loaded right now. Try again in a moment.");
       } finally {
         setLoading(false);
       }
@@ -350,6 +688,22 @@
       fromSelect.value = toSelect.value;
       toSelect.value = currentFrom;
       convert();
+    });
+
+    // Auto-convert on input change (debounced)
+    let convertTimeout;
+    amountInput.addEventListener("input", () => {
+      clearTimeout(convertTimeout);
+      convertTimeout = setTimeout(convert, 500);
+    });
+
+    fromSelect.addEventListener("change", convert);
+    toSelect.addEventListener("change", convert);
+
+    // Focus amount input on page load
+    window.addEventListener("load", () => {
+      amountInput.focus();
+      amountInput.select();
     });
 
     loadCurrencies();
